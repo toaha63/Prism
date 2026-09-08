@@ -1,0 +1,7 @@
+$a = [1,2,3];
+for $x, 0 to 50 encrease 1:
+{
+   array_push($a, rand(1,60));
+}
+print($a);
+print($a == [1,2, 3]);

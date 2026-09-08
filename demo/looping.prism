@@ -1,0 +1,14 @@
+//for loop:
+for $i, 0 to 50 encrease 1: {
+    if ! ($i & 1) : {
+        print($i);
+     }
+}
+
+//while loop
+
+$x = 0;
+while($x >= -80): {
+    print($x);
+    parent $x = parent $x - 1;
+}

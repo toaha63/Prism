@@ -1,0 +1,10 @@
+void gui_set_callback(void (*cb)(const char*));
+void* gui_frame_new(const char* title, int width, int height, int x, int y);
+void* gui_label_new(void* frame, const char* text, int x, int y, int font_size);
+void* gui_button_new(void* frame, const char* text, int x, int y, int w, int h);
+void gui_button_set_callback(void* button, const char* callback_str);
+void gui_label_set_text(void* label, const char* text);
+char* gui_label_get_text(void* label);
+void gui_auto_widget_scale(void* frame, int enabled);
+void gui_start(void* frame);
+void gui_quit(void);

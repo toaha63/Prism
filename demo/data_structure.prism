@@ -1,0 +1,55 @@
+//hashmap
+$country_and_capitals = {
+    "Bangladesh" : "Dhaka",
+    "India" : "New Delhi",
+    "Japan" : "Tokyo",
+    "Russia" : "Moscow",
+    "USA" : "Washington DC",
+    "England" : "London",
+    "Nepal" : "Kathmandu",
+    "Afganistan" : "Kabul",
+    "Egypt" : "Kayro"
+};
+
+print($country_and_capitals);
+
+$v1 = map_get_value($country_and_capitals, "Bangladesh");
+$v2 = map_get_value($country_and_capitals, "Russia");
+
+print("Capital of Bangladesh - " + $v1);
+print("Capital of Russia - " + $v2);
+
+map_push($country_and_capitals, "China", "Beijing");
+
+print("Index of China: " + map_get_index($country_and_capitals, "China"));
+
+map_remove($country_and_capitals, "Nepal");
+print("Nepal removed");
+print($country_and_capitals);
+print("\n");
+
+//Array
+$e = 2.718281;
+$a = [1, 2, 3, "Hello", "Bangladesh", 3.14159, $e];
+print($a);
+
+array_push($a, 7);
+array_push($a, 8);
+
+print("After push: " + $a);
+
+array_remove($a, 0);
+
+print("After remove: " + $a);
+
+print("Poopi nong array: " + array_pop($a));
+
+print("After popped: " + $a);
+
+array_push($a, array_shift($a));
+
+print("After copying first item to last: " + $a);
+array_unshift($a, "Prism");
+print("After adding an item to first: " + $a);
+
+//array_hashcode($a); it'll return MD5 hash of that 

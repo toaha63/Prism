@@ -1,0 +1,5 @@
+for _, 1 to 5000 encrease 10:
+{
+    print(rand(1, 1000));
+}
+// Runs 500 times (step = 10)
