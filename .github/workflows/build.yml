@@ -53,9 +53,11 @@ jobs:
           githubToken: ${{ github.token }}
           run: |
             apt-get update
-            apt-get install -y rustc cargo clang \
+            apt-get install -y curl clang \
               libgtk-3-dev libcurl4-openssl-dev libzip-dev libsqlite3-dev \
               pkg-config
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+            . "$HOME/.cargo/env"
             chmod +x build.sh
             ./build.sh
             mv prism prism-linux-arm64
@@ -93,3 +95,5 @@ jobs:
           generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+YAML_END
+
