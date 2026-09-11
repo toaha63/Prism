@@ -54,12 +54,6 @@ rustc -C opt-level=2 \
       -C link-arg=-lglib-2.0 \
       -A warnings \
       main.rs \
-      sha256sum.rs \
-      sha512sum.rs \
-      lexer.rs \
-      parser.rs \
-      interpreter.rs \
-      pacman.rs \
       -o prism
 
 echo "Build complete: ./prism"
