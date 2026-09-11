@@ -1,0 +1,15 @@
+$db = db_open("injection_test.db");
+db_execute($db, "CREATE TABLE IF NOT EXISTS secret (id INTEGER, data TEXT)");
+db_execute_params($db, "INSERT INTO secret (id, data) VALUES (?, ?)", ["1", "TOP SECRET"]);
+
+$user_input = "1 OR 1=1";
+
+// SAFE - won't return the secret
+$result = db_query($db, "SELECT * FROM secret WHERE id = ?", [$user_input]);
+print("Safe result: " + $result);
+// Output: [] (empty, because "1 OR 1=1" isn't a valid id)
+
+// UNSAFE (if we allowed raw concatenation) - would return the secret
+// But we don't allow that! ✅
+
+db_close($db);
