@@ -1,0 +1,48 @@
+//Arithmetic Operators
+
+$add = 3 + 2.71;
+
+$sub = 90 - 2;
+
+$multiply = 20 * $sub;
+
+$div = 20 / 10;
+
+print("$add = " + $add);
+print("$sub = " + $sub);
+print("$multiply = " + $multiply);
+print("$div = " + $div);
+
+//Bitwise operators:
+
+$bitwise_and = 2 & 3;
+
+$bitwise_or = 2 | 5;
+
+$bitwise_not = !2;
+
+$bitwise_xor = 4 ^ 8;
+
+$bitwise_xnor = ~(4 ^ 8);
+
+print("$bitwise_and = " + $bitwise_and);
+
+print("$bitwise_or = " + $bitwise_or);
+
+print("$bitwise_not = " + $bitwise_not);
+
+print("bitwise_xor = " + bitwise_xor);
+
+print("$bitwise_xnor = " + $bitwise_xnor);
+
+//Logical operators:
+
+$logical_and = 18 < 19 && 2 == 2;
+print("$logical_and = " + $logical_and);
+
+$logical_or = 18 < 19 || 2 == 2;
+print("$logical_or = " + $logical_or);
+
+$logical_not = 2 != 2;
+print("$logical_not = " + $logical_not);
+

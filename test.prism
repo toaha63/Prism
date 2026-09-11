@@ -1,0 +1,4 @@
+fn ret_zero() :
+{
+    return 3*3;
+}

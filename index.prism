@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GET Request Test</title>
+    <style>
+        body { font-family: monospace; padding: 20px; max-width: 500px; margin: auto; }
+        input, button { margin: 10px 0; padding: 8px; width: 100%; }
+        pre { background: #f0f0f0; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h2>GET Request Test</h2>
+    
+    <form method="GET" action="/">
+        Search: <input type="text" name="q" placeholder="Enter search term"><br>
+        Limit: <input type="number" name="limit" value="10"><br>
+        <button type="submit">Search (GET)</button>
+    </form>
+    
+    <?prism
+    // Handle GET request
+    $method = request_method();
+    if $method == "GET":
+    {
+        $search = get("q");
+        $limit = get("limit");
+        
+        if $search != "":
+        {
+            print_s("<h3>GET Parameters Received:</h3>");
+            print_s("<pre>");
+            print_s("Search: " + $search + "\n");
+            print_s("Limit: " + $limit + "\n");
+            print_s("Time: " + date("Y-m-d H:i:s") + "\n");
+            print_s("</pre>");
+            
+            print_s("<h3>Results for '" + $search + "':</h3>");
+            print_s("<ul>");
+            for $i, 1 to int($limit) encrease 1:
+            {
+                print_s("<li>Result " + $i + " for " + $search + "</li>");
+            }
+            print_s("</ul>");
+        }
+        else:
+        {
+            print_s("<p>Enter a search term above</p>");
+        }
+    }
+    ?>
+</body>
+</html>
