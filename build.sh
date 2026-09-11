@@ -47,5 +47,5 @@ rustc -C opt-level=2 \
       -o prism
 
 echo "Build complete: ./prism"
-SCRIPT_END
-chmod +x build.sh
+
+
