@@ -11,6 +11,7 @@ use std::io::{Read};
 use lexer::Lexer;
 use parser::Parser;
 use std::collections::HashSet;
+use std::os::raw::c_char;
 
 type BuiltinFn = fn(&mut Interpreter, Vec<Expr>) -> Result<Value, String>;
 
@@ -24,7 +25,7 @@ extern "C" fn callback_bridge(name: *const i8) {
     unsafe {
         if !CALLBACK_INTERPRETER.is_null() {
             let interpreter = &mut *CALLBACK_INTERPRETER;
-            let c_str = std::ffi::CStr::from_ptr(name as *const u8);
+            let c_str = std::ffi::CStr::from_ptr(name as *const c_char);
             let func_name = c_str.to_string_lossy().into_owned();
 
             if let Some(func) = interpreter.callbacks.get(&func_name) {
@@ -45,7 +46,7 @@ extern "C" fn button_callback_handler(callback_id: *const i8) {
 
         let interpreter = &mut *GLOBAL_INTERPRETER;
 
-        let c_str = match std::ffi::CStr::from_ptr(callback_id as *const u8).to_str() {
+        let c_str = match std::ffi::CStr::from_ptr(callback_id as *const c_char).to_str() {
             Ok(s) => s,
             Err(_) => return,
         };
@@ -1280,7 +1281,7 @@ impl Interpreter {
         }
 
         let result_str = unsafe {
-            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const u8);
+            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const c_char);
             c_str.to_string_lossy().into_owned()
         };
 
@@ -1695,7 +1696,7 @@ impl Interpreter {
         }
 
         let result_str = unsafe {
-            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const u8);
+            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const c_char);
             c_str.to_string_lossy().into_owned()
         };
 
@@ -1723,7 +1724,7 @@ impl Interpreter {
         }
 
         let result_str = unsafe {
-            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const u8);
+            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const c_char);
             c_str.to_string_lossy().into_owned()
         };
 
@@ -4365,7 +4366,7 @@ impl Interpreter {
         }
 
         let result_str = unsafe {
-            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const u8);
+            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const c_char);
             c_str.to_string_lossy().into_owned()
         };
 
@@ -4414,7 +4415,7 @@ impl Interpreter {
         }
 
         let result_str = unsafe {
-            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const u8);
+            let c_str = std::ffi::CStr::from_ptr(result_ptr as *const c_char);
             c_str.to_string_lossy().into_owned()
         };
 
@@ -6532,7 +6533,7 @@ impl Interpreter {
         if result_ptr.is_null() {
             Ok(Value::Nil)
         } else {
-            let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const u8) };
+            let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const c_char) };
             let result_str = c_str.to_string_lossy().into_owned();
             unsafe { free_string(result_ptr) };
             Ok(Value::String(result_str))
@@ -6578,7 +6579,7 @@ impl Interpreter {
         if result_ptr.is_null() {
             Err("Regex replacement failed".to_string())
         } else {
-            let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const u8) };
+            let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const c_char) };
             let result_str = c_str.to_string_lossy().into_owned();
             unsafe { free_string(result_ptr) };
             Ok(Value::String(result_str))
@@ -6629,7 +6630,7 @@ impl Interpreter {
         for i in 0..count {
             let c_str = unsafe {
                 let ptr = *results_ptr.offset(i as isize);
-                std::ffi::CStr::from_ptr(ptr as *const u8)
+                std::ffi::CStr::from_ptr(ptr as *const c_char)
             };
             arr.push(Value::String(c_str.to_string_lossy().into_owned()));
         }
@@ -9188,7 +9189,7 @@ impl Interpreter {
             return Err("HTTP request failed".to_string());
         }
 
-        let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const u8) };
+        let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const c_char) };
         let result_str = c_str.to_string_lossy().into_owned();
         unsafe { free_string(result_ptr as *const i8) };
 
@@ -9218,7 +9219,7 @@ impl Interpreter {
             return Err("HTTP POST request failed".to_string());
         }
 
-        let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const u8) };
+        let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const c_char) };
         let result_str = c_str.to_string_lossy().into_owned();
         unsafe { free_string(result_ptr as *const i8) };
 
@@ -9271,7 +9272,7 @@ impl Interpreter {
             return Err("HTTP request failed".to_string());
         }
 
-        let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const u8) };
+        let c_str = unsafe { std::ffi::CStr::from_ptr(result_ptr as *const c_char) };
         let result_str = c_str.to_string_lossy().into_owned();
         unsafe { free_string(result_ptr as *const i8) };
 
