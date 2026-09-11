@@ -42,6 +42,7 @@ rustc -C opt-level=2 \
       -C link-arg=-lzip \
       -C link-arg=-lsqlite3 \
       -C link-arg=-lglib-2.0 \
+      -C link-arg=-lm \
       -A warnings \
       main.rs \
       -o prism
