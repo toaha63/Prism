@@ -1,0 +1,16 @@
+$a_number = 500;
+$another_number = 2.718281828;
+$name = "Prism";
+$is18 = true;
+
+$d = $a_number;
+
+print("$a_number = " + $a_number);
+
+print("$another_number = " + $another_number);
+
+print("$name = " + $name);
+
+print("$d = " + $d);
+
+print("$is18 = " + $is18);

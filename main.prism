@@ -1,0 +1,7 @@
+try
+{
+    print(available_functions("Frame"));
+}
+catch($e) {
+    print("Not found function frame.");
+}
