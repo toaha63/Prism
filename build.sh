@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Prism build script — works in Termux (local) and GitHub CI (portable)
 #
@@ -24,12 +23,15 @@ fi
 
 # ---------- Detect CI vs local ----------
 # Never use -march=native in CI — the binary won't run on end-user CPUs
+# Use lower optimization in CI — QEMU-emulated ARM64 segfaults on -O3
 if [ -n "$CI" ] || [ -n "$GITHUB_ACTIONS" ]; then
     ARCH_FLAGS="-mtune=generic"
-    RUST_TUNING="-C lto=thin -C opt-level=2"
-    echo "CI detected — portable CPU flags"
+    C_OPT="-O1"
+    RUST_TUNING="-C lto=thin -C opt-level=1"
+    echo "CI detected — portable CPU flags, reduced optimization"
 else
     ARCH_FLAGS="-march=native -mtune=native"
+    C_OPT="-O3"
     RUST_TUNING="-C lto=fat -C target-cpu=native -C opt-level=2"
     echo "Local build — native CPU optimizations"
 fi
@@ -45,7 +47,7 @@ fi
 echo "Using compiler: $CC"
 
 # ---------- Common C flags ----------
-C_FLAGS="-O3 $ARCH_FLAGS -fomit-frame-pointer -fstrict-aliasing"
+C_FLAGS="$C_OPT $ARCH_FLAGS -fomit-frame-pointer -fstrict-aliasing"
 
 # ---------- GTK detection (GUI mode only) ----------
 if [ "$GUI_ENABLED" = "1" ]; then
@@ -89,13 +91,11 @@ RUST_COMMON="-C panic=unwind \
     -C link-arg=-lbuiltins \
     -A warnings"
 
-# Libraries needed in both modes
 RUST_LIBS="-C link-arg=-lcurl \
     -C link-arg=-lzip \
     -C link-arg=-lsqlite3 \
     -C link-arg=-lm"
 
-# GUI mode: add GTK
 if [ "$GUI_ENABLED" = "1" ]; then
     rustc $RUST_COMMON $RUST_TUNING \
           --cfg gui \
