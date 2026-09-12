@@ -1,0 +1,9 @@
+$name = "";
+
+print("Firstly, give me your name: ");
+
+$name = string(in());
+
+print("Hey " + $name + ", Welcome to Prism programming language.");
+
+
