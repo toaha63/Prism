@@ -1,4 +1,3 @@
-
 #!/bin/bash
 # Prism build script — works in Termux (local) and GitHub CI (portable)
 #
@@ -23,8 +22,6 @@ else
 fi
 
 # ---------- Detect CI vs local ----------
-# In CI: use portable ISA (never -march=native) so binary runs on any CPU
-# Locally: use native CPU + aggressive LTO
 if [ -n "$CI" ] || [ -n "$GITHUB_ACTIONS" ]; then
     ARCH_FLAGS="-mtune=generic"
     RUST_TUNING="-C lto=fat -C codegen-units=1 -C opt-level=3 -C prefer-dynamic=no"
@@ -46,7 +43,11 @@ fi
 echo "Using compiler: $CC"
 
 # ---------- Common C flags (maximum optimization) ----------
-C_FLAGS="-O3 $ARCH_FLAGS -flto -funroll-loops -ffast-math -fomit-frame-pointer \
+# NOTE: -flto is deliberately NOT used here.
+# Rust's -C lto=fat handles Rust-side LTO. Passing -flto to clang
+# for builtins.c creates LLVM bitcode objects that rustc's linker
+# (GNU ld) cannot consume, causing "file format not recognized".
+C_FLAGS="-O3 $ARCH_FLAGS -funroll-loops -ffast-math -fomit-frame-pointer \
     -fstrict-aliasing -fno-signed-zeros -freciprocal-math -fno-trapping-math \
     -fassociative-math"
 
