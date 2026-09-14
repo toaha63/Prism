@@ -6770,77 +6770,102 @@ impl Interpreter {
         if args.len() < 1 || args.len() > 2 {
             return Err("array_sort expects 1-2 arguments (array, [comparator])".to_string());
         }
-
+    
         let arr = match &args[0] {
             Expr::Variable(name) => interpreter.get_array_from_variable(name)?,
             Expr::ParentAccess(var_name) => interpreter.get_array_from_parent(var_name)?,
             _ => return Err("array_sort expects array variable as first argument".to_string()),
         };
-
-        let var_name = match &args[0] {
-            Expr::Variable(name) => name.clone(),
-            Expr::ParentAccess(var_name) => var_name.clone(),
-            _ => return Err("array_sort: invalid array reference".to_string()),
-        };
-
+    
         if args.len() == 2 {
             let callback = args[1].clone();
             let callback_value = interpreter.evaluate_expression(callback)?;
-
             let func_rc = match callback_value {
                 Value::Function(f) => f,
                 _ => return Err("array_sort: second argument must be a lambda function".to_string()),
             };
-
+    
             let mut sorted_arr = arr;
             let func_name = "__temp_comparator".to_string();
             let len = sorted_arr.len();
-
+    
             for i in 0..len {
                 for j in 0..(len - i - 1) {
                     let left_val = sorted_arr[j].clone();
                     let right_val = sorted_arr[j + 1].clone();
-
+    
                     let left_literal = interpreter.value_to_literal(left_val)?;
                     let right_literal = interpreter.value_to_literal(right_val)?;
-
+    
                     let call_args = vec![
                         Expr::Literal(left_literal),
                         Expr::Literal(right_literal)
                     ];
-
+    
                     interpreter.environment.borrow_mut().define(func_name.clone(), Value::Function(func_rc.clone()));
                     let temp_call = Expr::Call(func_name.clone(), call_args);
                     let result = interpreter.evaluate_expression(temp_call)?;
-
+    
                     let should_swap = match result {
                         Value::Number(n) => n > 0.0,
                         _ => !interpreter.is_truthy(&result),
                     };
-
+    
                     if should_swap {
                         sorted_arr.swap(j, j + 1);
                     }
                 }
             }
-
+    
             match &args[0] {
                 Expr::Variable(name) => interpreter.set_array_to_variable(name, sorted_arr)?,
                 Expr::ParentAccess(var_name) => interpreter.set_array_to_parent(var_name, sorted_arr)?,
                 _ => return Err("array_sort: invalid array reference".to_string()),
             }
-
+    
             Ok(Value::Nil)
         } else {
             let mut sorted_arr = arr;
-            sorted_arr.sort_by(|a, b| a.to_string().cmp(&b.to_string()));
-
+    
+            sorted_arr.sort_by(|a, b| {
+                match (a, b) {
+                    // Both numbers: numeric comparison
+                    (Value::Number(x), Value::Number(y)) => {
+                        x.partial_cmp(y).unwrap_or(std::cmp::Ordering::Equal)
+                    }
+    
+                    // Both strings: alphabetical comparison
+                    (Value::String(x), Value::String(y)) => x.cmp(y),
+    
+                    // Both chars: alphabetical comparison
+                    (Value::Char(x), Value::Char(y)) => x.cmp(y),
+    
+                    // Both booleans: false < true
+                    (Value::Boolean(x), Value::Boolean(y)) => x.cmp(y),
+    
+                    // Different types: numbers before strings
+                    (Value::Number(_), _) => std::cmp::Ordering::Less,
+                    (_, Value::Number(_)) => std::cmp::Ordering::Greater,
+    
+                    // Strings before other types
+                    (Value::String(_), _) => std::cmp::Ordering::Less,
+                    (_, Value::String(_)) => std::cmp::Ordering::Greater,
+    
+                    // Chars before other types
+                    (Value::Char(_), _) => std::cmp::Ordering::Less,
+                    (_, Value::Char(_)) => std::cmp::Ordering::Greater,
+    
+                    // Fallback: alphabetical via display
+                    _ => a.to_string().cmp(&b.to_string()),
+                }
+            });
+    
             match &args[0] {
                 Expr::Variable(name) => interpreter.set_array_to_variable(name, sorted_arr)?,
                 Expr::ParentAccess(var_name) => interpreter.set_array_to_parent(var_name, sorted_arr)?,
                 _ => return Err("array_sort: invalid array reference".to_string()),
             }
-
+    
             Ok(Value::Nil)
         }
     }
@@ -6849,69 +6874,83 @@ impl Interpreter {
         if args.len() < 1 || args.len() > 2 {
             return Err("array_rsort expects 1-2 arguments (array, [comparator])".to_string());
         }
-
+    
         let arr = match &args[0] {
             Expr::Variable(name) => interpreter.get_array_from_variable(name)?,
             Expr::ParentAccess(var_name) => interpreter.get_array_from_parent(var_name)?,
             _ => return Err("array_rsort expects array variable as first argument".to_string()),
         };
-
-        let var_name = match &args[0] {
-            Expr::Variable(name) => name.clone(),
-            Expr::ParentAccess(var_name) => var_name.clone(),
-            _ => return Err("array_rsort: invalid array reference".to_string()),
-        };
-
+    
         if args.len() == 2 {
             let callback = args[1].clone();
             let callback_value = interpreter.evaluate_expression(callback)?;
-
             let func_rc = match callback_value {
                 Value::Function(f) => f,
                 _ => return Err("array_rsort: second argument must be a lambda function".to_string()),
             };
-
+    
             let mut sorted_arr = arr;
             let func_name = "__temp_comparator".to_string();
-
             let len = sorted_arr.len();
+    
             for i in 0..len {
                 for j in 0..(len - i - 1) {
                     let left_literal = interpreter.value_to_literal(sorted_arr[j + 1].clone())?;
                     let right_literal = interpreter.value_to_literal(sorted_arr[j].clone())?;
-
+    
                     let call_args = vec![
                         Expr::Literal(left_literal),
                         Expr::Literal(right_literal)
                     ];
-
+    
                     interpreter.environment.borrow_mut().define(func_name.clone(), Value::Function(func_rc.clone()));
                     let temp_call = Expr::Call(func_name.clone(), call_args);
                     let result = interpreter.evaluate_expression(temp_call)?;
-
+    
                     if interpreter.is_truthy(&result) {
                         sorted_arr.swap(j, j + 1);
                     }
                 }
             }
-
+    
             match &args[0] {
                 Expr::Variable(name) => interpreter.set_array_to_variable(name, sorted_arr)?,
                 Expr::ParentAccess(var_name) => interpreter.set_array_to_parent(var_name, sorted_arr)?,
                 _ => return Err("array_rsort: invalid array reference".to_string()),
             }
-
+    
             Ok(Value::Nil)
         } else {
             let mut sorted_arr = arr;
-            sorted_arr.sort_by(|a, b| b.to_string().cmp(&a.to_string()));
-
+    
+            sorted_arr.sort_by(|a, b| {
+                match (a, b) {
+                    (Value::Number(x), Value::Number(y)) => {
+                        y.partial_cmp(x).unwrap_or(std::cmp::Ordering::Equal)
+                    }
+                    (Value::String(x), Value::String(y)) => y.cmp(x),
+                    (Value::Char(x), Value::Char(y)) => y.cmp(x),
+                    (Value::Boolean(x), Value::Boolean(y)) => y.cmp(x),
+    
+                    (Value::Number(_), _) => std::cmp::Ordering::Less,
+                    (_, Value::Number(_)) => std::cmp::Ordering::Greater,
+    
+                    (Value::String(_), _) => std::cmp::Ordering::Less,
+                    (_, Value::String(_)) => std::cmp::Ordering::Greater,
+    
+                    (Value::Char(_), _) => std::cmp::Ordering::Less,
+                    (_, Value::Char(_)) => std::cmp::Ordering::Greater,
+    
+                    _ => b.to_string().cmp(&a.to_string()),
+                }
+            });
+    
             match &args[0] {
                 Expr::Variable(name) => interpreter.set_array_to_variable(name, sorted_arr)?,
                 Expr::ParentAccess(var_name) => interpreter.set_array_to_parent(var_name, sorted_arr)?,
                 _ => return Err("array_rsort: invalid array reference".to_string()),
             }
-
+    
             Ok(Value::Nil)
         }
     }
