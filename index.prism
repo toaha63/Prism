@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prism Web Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .main-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #667eea;
+            font-weight: 700;
+        }
+        .header p {
+            color: #666;
+        }
+        .info-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .info-box pre {
+            margin: 0;
+            font-family: 'Courier New', monospace;
+            color: #333;
+        }
+        .badge-custom {
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-right: 5px;
+        }
+        .result-item {
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #764ba2;
+        }
+        .result-item strong {
+            color: #667eea;
+        }
+        .btn-custom {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            font-weight: 600;
+        }
+        .btn-custom:hover {
+            background: linear-gradient(135deg, #5568d3, #653b91);
+            color: white;
+        }
+        .footer {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-card">
+            <!-- Header -->
+            <div class="header">
+                <h1><i class="fas fa-gem"></i> Prism Web Server</h1>
+                <p>Backend demo powered by the Prism programming language</p>
+                <?prism
+                $method = request_method();
+                print_s("<span class='badge-custom'>" + $method + " Request</span>");
+                print_s("<span class='badge-custom'>" + date("H:i:s") + "</span>");
+                ?>
+            </div>
+
+            <!-- Server Info Section -->
+            <div class="info-box">
+                <h5><i class="fas fa-server text-primary"></i> Server Information</h5>
+                <?prism
+                print_s("<pre>"); 
+                print_s("Server Time : " + date("Y-m-d H:i:s") + "\n");
+                print_s("Unix Time   : " + time() + "\n");
+                print_s("Method      : " + request_method() + "\n");
+                print_s("</pre>");
+                ?>
+            </div>
+
+            <!-- Search Form -->
+            <h4 class="mb-3"><i class="fas fa-search text-primary"></i> Search Demo</h4>
+            <form method="GET" action="/">
+                <div class="row">
+                    <div class="col-md-8 mb-2">
+                        <input type="text" 
+                               name="q" 
+                               class="form-control form-control-lg" 
+                               placeholder="Search something..."
+                               value="<?prism print_s(get("q")); ?>">
+                    </div>
+                    <div class="col-md-4 mb-2">
+                        <button type="submit" class="btn btn-custom btn-lg w-100">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Search Results -->
+            <?prism
+            $search = get("q");
+            
+            if $search != "":
+            {
+                print_s("<div class='mt-4'>");
+                print_s("<h5><i class='fas fa-list text-primary'></i> Results for: <em>" + html_escape($search) + "</em></h5>");
+                
+                // Simulate search results with a loop
+                $count = 5;
+                for $i, 1 to $count encrease 1:
+                {
+                    print_s("<div class='result-item'>");
+                    print_s("<strong>Result #" + $i + ":</strong> Item matching '");
+                    print_s(html_escape($search));
+                    print_s("'");
+                    print_s("</div>");
+                }
+                
+                print_s("</div>");
+            }
+            else:
+            {
+                print_s("<div class='text-center text-muted mt-3'>");
+                print_s("<i class='fas fa-info-circle'></i> Type something above and click Search");
+                print_s("</div>");
+            }
+            ?>
+
+            <!-- POST Form -->
+            <hr class="my-4">
+            <h4 class="mb-3"><i class="fas fa-paper-plane text-primary"></i> POST Request Demo</h4>
+            <form method="POST" action="/">
+                <div class="row">
+                    <div class="col-md-5 mb-2">
+                        <input type="text" 
+                               name="name" 
+                               class="form-control" 
+                               placeholder="Your name">
+                    </div>
+                    <div class="col-md-5 mb-2">
+                        <input type="email" 
+                               name="email" 
+                               class="form-control" 
+                               placeholder="Your email">
+                    </div>
+                    <div class="col-md-2 mb-2">
+                        <button type="submit" class="btn btn-custom w-100">
+                            <i class="fas fa-check"></i> Submit
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- POST Results -->
+            <?prism
+            if $method == "POST":
+            {
+                $name = post("name");
+                $email = post("email");
+                
+                if $name != "":
+                {
+                    print_s("<div class='info-box mt-3'>");
+                    print_s("<h5><i class='fas fa-user text-success'></i> POST Data Received</h5>");
+                    print_s("<pre>");
+                    print_s("Name  : " + html_escape($name) + "\n");
+                    print_s("Email : " + html_escape($email) + "\n");
+                    print_s("</pre>");
+                    print_s("</div>");
+                }
+            }
+            ?>
+
+            <!-- Interactive Demo -->
+            <hr class="my-4">
+            <h4 class="mb-3"><i class="fas fa-calculator text-primary"></i> Interactive Demo</h4>
+            <?prism
+            print_s("<div class='row'>");
+            
+            // Math demo
+            $numbers = [3, 7, 12, 5, 8];
+            
+            print_s("<div class='col-md-6'>");
+            print_s("<div class='info-box'>");
+            print_s("<h6><i class='fas fa-chart-bar'></i> Array Operations</h6>");
+            print_s("<pre>");
+            print_s("Array      : " + json_encode($numbers) + "\n");
+            print_s("Sum        : " + array_sum($numbers) + "\n");
+            print_s("Min        : " + array_min($numbers) + "\n");
+            print_s("Max        : " + array_max($numbers) + "\n");
+            print_s("Count      : " + array_len($numbers) + "\n");
+            print_s("</pre>");
+            print_s("</div>");
+            print_s("</div>");
+            
+            // String demo
+            $text = "Hello, Prism!";
+            
+            print_s("<div class='col-md-6'>");
+            print_s("<div class='info-box'>");
+            print_s("<h6><i class='fas fa-font'></i> String Operations</h6>");
+            print_s("<pre>");
+            print_s("Original   : " + $text + "\n");
+            print_s("Uppercase  : " + strtoupper($text) + "\n");
+            print_s("Lowercase  : " + strtolower($text) + "\n");
+            print_s("Length     : " + strlen($text) + "\n");
+            print_s("SHA256     : " + substr(sha256_string($text), 0, 16) + "...\n");
+            print_s("</pre>");
+            print_s("</div>");
+            print_s("</div>");
+            
+            print_s("</div>");
+            ?>
+
+            <!-- Code Example -->
+            <hr class="my-4">
+            <h4 class="mb-3"><i class="fas fa-code text-primary"></i> How It Works</h4>
+        <div class="info-box">
+            <pre><?prism
+            print_s("<?prism\n");
+            print_s("    $name = get(\"q\");\n");
+            print_s("    if $name != \"\":\n");
+            print_s("    {\n");
+            print_s("        print_s(\"<h1>Hello \" + $name + \"!</h1>\");\n");
+            print_s("    }\n");
+            print_s("?" + chr(62));   // chr(62) = ">"
+            ?></pre>
+        </div>
+        </div>
+
+        <div class="footer">
+            <p>
+                <i class="fas fa-gem"></i> 
+                Prism Language v1.0.1 
+                <span class="mx-2">|</span>
+                <i class="fas fa-code"></i> 
+                Backend rendered
+            </p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

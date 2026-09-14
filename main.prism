@@ -1,0 +1,17 @@
+print("Default (FNV-1a 64-bit):");
+print(str_hash("hello"));
+print(str_hash("world"));
+print(str_hash(""));
+
+print("\nWith constant ALGORITHM_JAVA:");
+print(str_hash("hello", ALGORITHM_JAVA));
+print(str_hash("world", ALGORITHM_JAVA));
+
+print("\nWith constant ALGORITHM_FNV:");
+print(str_hash("hello", ALGORITHM_FNV));
+
+print("\nWith constant ALGORITHM_DJB2:");
+print(str_hash("hello", ALGORITHM_DJB2));
+
+print("\nWith constant ALGORITHM_FNV32:");
+print(str_hash("hello", ALGORITHM_FNV32));

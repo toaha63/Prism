@@ -1,0 +1,15 @@
+$message = "Enter your age to check that are you a voter:";
+
+print($message);
+
+$age = int(in());
+
+if $age >= 18: 
+{
+    print("Congrats! You can give vote.");
+}
+else:
+{
+    print("Ops... good luck for next time.");
+}
+
