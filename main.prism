@@ -1,17 +1,25 @@
-print("Default (FNV-1a 64-bit):");
-print(str_hash("hello"));
-print(str_hash("world"));
-print(str_hash(""));
+for _, 1 to 50000:
+{
+    print(rand(1, 5000000));
+}
 
-print("\nWith constant ALGORITHM_JAVA:");
-print(str_hash("hello", ALGORITHM_JAVA));
-print(str_hash("world", ALGORITHM_JAVA));
+$my_list = [];
+for $i, 1 to 50000:
+{
+    print($i);
+    array_push(parent $my_list, $i + rand(1, 50000));
+}
+print("Before sort: " + $my_list);
+array_sort($my_list);
+print("After sort: " + ($my_list));
 
-print("\nWith constant ALGORITHM_FNV:");
-print(str_hash("hello", ALGORITHM_FNV));
 
-print("\nWith constant ALGORITHM_DJB2:");
-print(str_hash("hello", ALGORITHM_DJB2));
+$file = fopen("test.txt", "w");
+fwrite_line($file, string($my_list));
+fclose($file);
 
-print("\nWith constant ALGORITHM_FNV32:");
-print(str_hash("hello", ALGORITHM_FNV32));
+$file = fopen("test.txt", "r");
+print(fread($file));
+fclose($file);
+
+file_remove("test.txt");
