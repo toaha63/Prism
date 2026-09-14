@@ -37,7 +37,7 @@ while true:
     parent $count = $count + 1;
     
     $elapsed = time() - $start;
-    if $elapsed >= 1800:
+    if $elapsed >= 14400:
     {
         break;
     }
