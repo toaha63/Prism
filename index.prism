@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Prism Web App</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Contact Form</h1>
+    
+    <?prism
+    $name = post("name");
+    $email = post("email");
+    $message = post("message");
+    
+    if $name != nil && $email != nil && $message != nil: {
+        // Save to file
+        $entry = $name + "," + $email + "," + $message + "\n";
+        file_append("contacts.csv", $entry);
+        print_s("<p class='success'>Thank you, " + $name + "!</p>");
+    }
+    ?>
+    
+    <form method="POST">
+        <p>Name: <input type="text" name="name" required></p>
+        <p>Email: <input type="email" name="email" required></p>
+        <p>Message: <textarea name="message" required></textarea></p>
+        <p><input type="submit" value="Send"></p>
+    </form>
+    
+    <h2>All Contacts</h2>
+    <?prism
+    if file_exists("contacts.csv"): {
+        $contacts = csv_read("contacts.csv");
+        print_s("<table border='1'>");
+        print_s("<tr><th>Name</th><th>Email</th><th>Message</th></tr>");
+        foreach $contacts will $row: {
+            if array_len($row) == 3: {
+                print_s("<tr><td>" + $row[0] + "</td><td>" + $row[1] + "</td><td>" + $row[2] + "</td></tr>");
+            }
+        }
+        print_s("</table>");
+    }
+    ?>
+</body>
+</html>

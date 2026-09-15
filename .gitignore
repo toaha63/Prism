@@ -1,0 +1,22 @@
+# Build artifacts
+*.o
+*.a
+*.db
+*.db3
+
+# Compiled binaries
+main
+prism
+prism-linux-x64
+prism-linux-arm64
+prism-termux-arm64
+
+# Editor / OS junk
+.vscode/
+.idea/
+*.swp
+.DS_Store
+*~
+
+# My sh script
+build.sh
