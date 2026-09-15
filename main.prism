@@ -1,14 +1,14 @@
 
-for _, 1 to 500000:
+for _, 1 to 50000:
 {
     print(rand(1, 5000000));
 }
 
 $my_list = [];
-for $i, 1 to 500000:
+for $i, 1 to 50000:
 {
     print($i);
-    array_push(parent $my_list, $i + rand(1, 50000));
+    array_push(parent $my_list, $i + rand(-50000, 50000));
 }
 print("Before sort: " + $my_list);
 array_sort($my_list);
@@ -39,7 +39,7 @@ while true:
     $count = $count + 1;
     
     $elapsed = time() - $start;
-    if $elapsed >= 18000:
+    if $elapsed >= (4 * 3600):
     {
         break;
     }
