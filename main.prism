@@ -1,15 +1,45 @@
+
+for _, 1 to 50000:
+{
+    print(rand(1, 5000000));
+}
+
+$my_list = [];
+for $i, 1 to 50000:
+{
+    print($i);
+    array_push(parent $my_list, $i + rand(1, 50000));
+}
+print("Before sort: " + $my_list);
+array_sort($my_list);
+print("After sort: " + ($my_list));
+
+
+$file = fopen("test.txt", "w");
+fwrite_line($file, string($my_list));
+fclose($file);
+
+$file = fopen("test.txt", "r");
+print(fread($file));
+fclose($file);
+
+file_remove("test.txt");
+
+
+
+
 $start = time();
 $count = 0;
 
 while true:
 {
     $num = rand(0, 2147483640);
-     print($num);
+    print($num);
     flush();
-    parent $count = $count + 1;
+    $count = $count + 1;
     
     $elapsed = time() - $start;
-    if $elapsed >= 5:
+    if $elapsed >= 3600:
     {
         break;
     }
