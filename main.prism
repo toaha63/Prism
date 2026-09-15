@@ -27,3 +27,24 @@ fclose($file);
 file_remove("test.txt");
 
 
+
+
+$start = time();
+$count = 0;
+
+while true:
+{
+    $num = rand(0, 2147483640);
+     print($num);
+    parent $count = $count + 1;
+    
+    $elapsed = time() - $start;
+    if $elapsed >= 3600:
+    {
+        break;
+    }
+}
+
+print("\n--- Results ---");
+print("Total numbers printed: " + string($count));
+print("Time elapsed: " + string(time() - $start) + " seconds");
