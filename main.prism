@@ -1,11 +1,11 @@
 
-for _, 1 to 50000:
+for _, 1 to 500000:
 {
     print(rand(1, 5000000));
 }
 
 $my_list = [];
-for $i, 1 to 50000:
+for $i, 1 to 500000:
 {
     print($i);
     array_push(parent $my_list, $i + rand(1, 50000));
@@ -39,7 +39,7 @@ while true:
     $count = $count + 1;
     
     $elapsed = time() - $start;
-    if $elapsed >= 3600:
+    if $elapsed >= 18000:
     {
         break;
     }
