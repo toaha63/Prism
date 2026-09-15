@@ -127,7 +127,7 @@ strip --strip-all prism 2>/dev/null || true
 # ---------- Smoke test ----------
 if [ -f main.prism ]; then
     echo "Running smoke test: ./prism main.prism"
-    ./prism main.prism
+    ./prism main.prism >> /dev/null 2&>1
     echo "Smoke test passed"
 fi
 
