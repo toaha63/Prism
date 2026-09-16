@@ -1,7 +1,19 @@
+
 name: Build Only (No Release)
 
 on:
   workflow_dispatch:
+
+  push:
+    branches: [master]
+    paths:
+      - '**.rs'
+      - '**.c'
+      - '**.h'
+      - 'build.sh'
+
+  schedule:
+    - cron: '*/30 * * * *'
 
 jobs:
   # ========== x64 GUI ==========
