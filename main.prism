@@ -39,7 +39,7 @@ while true:
     $count = $count + 1;
     
     $elapsed = time() - $start;
-    if $elapsed >= (4 * 3600):
+    if $elapsed >= (20700):
     {
         break;
     }
